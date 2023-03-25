@@ -3,16 +3,13 @@ all:
 CMD=main
 NAME=exe
 
-build:
+build: css
 	CGO_ENABLED=0 go build -o $(NAME) ./$(CMD).go
-
-build-linux-amd64:
-	GOOS=linux GOARCH=amd64 make build
 
 serve:
 	$(NAME) --local
 
-space-build-linux-amd64:
+space-build-linux-amd64: css
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
 	go build -o micro/$(NAME) ./$(CMD).go
 	ls -al micro/$(NAME)
