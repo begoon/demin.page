@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <script src="https://unpkg.com/lightbox2@2.11.4/dist/js/lightbox-plus-jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/lightbox2@2.11.4/dist/css/lightbox.min.css" />
+
+  <script src="https://unpkg.com/htmx.org@1.8.6" crossorigin="anonymous"></script>
+
+  <link href="style.css" rel="stylesheet">
+  <script src="script.js"></script>
+</head>
+<html>
+
+<body class="p-2">
+  <div class="fixed top-0 right-0" id="time" hx-get="/time" hx-trigger="every 1s" hx-target="#time" hx-swap="innerHTML">
+  </div>
+  <div class="fixed top-0 left-0" id="time">opening soon...</div>
+  <div class="grid h-screen place-items-center">
+    <i class="text-4xl">You cannot rush art</i>
+  </div>
+</body>
+
+</html>
