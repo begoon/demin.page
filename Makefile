@@ -19,7 +19,7 @@ space-build-linux-amd64: css
 deploy: space-build-linux-amd64 push
 
 push:
-	(cd micro && space push)
+	(cd micro && spacex push --verbose)
 
 css:
 	tailwindcss -m -i ./site/tailwind.css -o ./site/style.css

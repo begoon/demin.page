@@ -5,9 +5,7 @@ micros:
     src: ./
     engine: custom
     commands:
-      - ls -al exe* && unxz exe.xz && ls -al exe
+      - unxz exe.xz
     run: ./exe
     public_routes:
       - "/*"
-    include:
-      - ./exe
