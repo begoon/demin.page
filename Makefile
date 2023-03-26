@@ -22,7 +22,7 @@ push:
 	(cd micro && spacex push --verbose)
 
 css:
-	tailwindcss -m -i ./site/tailwind.css -o ./site/style.css
+	tailwindcss -m -i ./tailwind.css -o ./site/style.css
 
 watch:
 	npx watch "make css" ./site

@@ -9,3 +9,5 @@ micros:
     run: ./exe
     public_routes:
       - "/*"
+    include:
+      - ./exe
