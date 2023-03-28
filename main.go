@@ -18,7 +18,6 @@ import (
 	"github.com/gorilla/sessions"
 	echopprof "github.com/hiko1129/echo-pprof"
 
-	// echopprof "github.com/hiko1129/echo-pprof"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
