@@ -22,7 +22,7 @@
 <body class="p-2">
   <div class="fixed top-0 right-0" id="time" hx-get="/time" hx-trigger="every 1s" hx-target="#time" hx-swap="innerHTML">
   </div>
-  <div class="fixed top-0 left-0">you cannot rush art | click on the colony to restart...</div>
+  <div class="fixed top-0 left-0">click on the colony to restart</div>
   <div hx-trigger="every 1s" hx-get="/life" hx-target="#life" hx-swap="innerHTML"></div>
   <div class="grid h-screen place-items-center" id="life" hx-get="/life?restart=1" hx-target="#life"
     hx-swap="innerHTML">
