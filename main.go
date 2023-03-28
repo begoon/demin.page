@@ -5,15 +5,21 @@ import (
 	"flag"
 	"fmt"
 	"io/fs"
+	"math/rand"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	. "homepage/assert"
 	"homepage/console"
 
+	svg "github.com/ajstarks/svgo"
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/oklog/ulid/v2"
 	"github.com/rs/zerolog/log"
 )
 
@@ -28,11 +34,52 @@ var fLocal = flag.Bool("local", false, "use local files")
 //go:embed site/*
 var site embed.FS
 
+type Colony [100][100]uint8
+
+func NewColony() *Colony {
+	c := Colony{}
+	for i := 1; i < len(c)-1; i++ {
+		for j := 1; j < len(c[i])-1; j++ {
+			c[i][j] = uint8(rand.Int()>>3) & 1
+		}
+	}
+	return &c
+}
+
+func (c Colony) Neighours(x, y int) uint8 {
+	n := c[y-1][x-1] + c[y-1][x] + c[y-1][x+1]
+	n += c[y][x-1] + c[y][x+1]
+	n += c[y+1][x-1] + c[y+1][x] + c[y+1][x+1]
+	return n
+}
+
+func (c Colony) Alive(x, y int) bool {
+	return c[y][x] == 1
+}
+
+func (c Colony) Next() *Colony {
+	g := Colony{}
+	for y := 1; y < len(c)-1; y++ {
+		for x := 1; x < len(c[x])-1; x++ {
+			n := c.Neighours(x, y)
+			if c.Alive(x, y) {
+				if n == 2 || n == 3 {
+					g[y][x] = 1
+				}
+			} else {
+				if n == 3 {
+					g[y][x] = 1
+				}
+			}
+		}
+	}
+	return &g
+}
+
 func serve() {
 	e := echo.New()
 	e.Debug = false
 	e.HideBanner = true
-	e.DisableHTTP2 = true
 
 	var siteFS fs.FS = site
 
@@ -44,6 +91,7 @@ func serve() {
 	e.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
 		DisablePrintStack: true,
 	}))
+
 	e.Use(middleware.LoggerWithConfig(
 		middleware.LoggerConfig{
 			Skipper: func(c echo.Context) bool {
@@ -60,8 +108,80 @@ func serve() {
 
 	e.Use(middleware.CORS())
 
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte("!"))))
+
 	e.GET("/time", func(c echo.Context) error {
 		return c.String(200, fmt.Sprint(time.Now().Format(time.RFC3339)))
+	})
+
+	colonies := map[string]*Colony{}
+	var lock = sync.RWMutex{}
+
+	load := func(id string) *Colony {
+		lock.RLock()
+		defer lock.RUnlock()
+		if c, ok := colonies[id]; ok {
+			log.Info().Str("id", id).Msg("loaded")
+			return c
+		}
+		log.Info().Str("id", id).Msg("generated")
+		return NewColony()
+	}
+
+	save := func(id string, c *Colony) {
+		lock.Lock()
+		defer lock.Unlock()
+		colonies[id] = c
+		log.Info().Str("id", id).Msg("saved")
+	}
+
+	e.GET("/life", func(c echo.Context) error {
+		s, err := session.Get("session", c)
+		if err != nil {
+			log.Error().Err(err).Msg("session")
+		}
+
+		s.Options = &sessions.Options{
+			Path:     "/",
+			MaxAge:   86400 * 7,
+			HttpOnly: true,
+		}
+
+		colonyID, found := s.Values["colonyID"].(string)
+		if !found || c.QueryParam("restart") != "" {
+			log.Info().Str("id", colonyID).Msg("new colony")
+			colonyID = ulid.Make().String()
+			s.Values["colonyID"] = colonyID
+		}
+
+		colony := load(colonyID)
+		next := *colony.Next()
+		colony = &next
+		save(colonyID, colony)
+
+		s.Save(c.Request(), c.Response())
+
+		w := c.Response().Writer
+		w.Header().Set("Content-Type", "image/svg+xml")
+		g := svg.New(w)
+
+		sx := 5
+		sy := 5
+		r := sx / 2
+		g.Start(sx*len(colony), sy*len(colony[0]))
+		for i := 0; i < len(colony); i++ {
+			for j := 0; j < len(colony[0]); j++ {
+				var color string
+				if colony[i][j] == 1 {
+					color = "green"
+				} else {
+					color = "white"
+				}
+				g.Circle(i*sx+r, j*sy+r, r, "fill: "+color)
+			}
+		}
+		g.End()
+		return nil
 	})
 
 	var port string
