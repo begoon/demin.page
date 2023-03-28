@@ -4,18 +4,21 @@ import (
 	"embed"
 	"flag"
 	"fmt"
+	. "homepage/assert"
+	"homepage/console"
 	"io/fs"
 	"math/rand"
+	_ "net/http/pprof"
 	"os"
 	"strings"
 	"sync"
 	"time"
 
-	. "homepage/assert"
-	"homepage/console"
-
 	svg "github.com/ajstarks/svgo"
 	"github.com/gorilla/sessions"
+	echopprof "github.com/hiko1129/echo-pprof"
+
+	// echopprof "github.com/hiko1129/echo-pprof"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -76,10 +79,35 @@ func (c Colony) Next() *Colony {
 	return &g
 }
 
-func serve() {
+func TimeHandler(c echo.Context) error {
+	return c.String(200, fmt.Sprint(time.Now().Format(time.RFC3339)))
+}
+
+func PingHandler(c echo.Context) error {
+	return c.String(200, "pong")
+}
+
+var secured = []string{"/ping"}
+
+func apiKeyValidator(key string, c echo.Context) (bool, error) {
+	return key == "zorba", nil
+}
+
+func apiKeySkipper(c echo.Context) bool {
+	u := c.Request().URL.RequestURI()
+	for _, e := range secured {
+		if strings.Contains(u, e) {
+			return false
+		}
+	}
+	return true
+}
+
+func Configure() *echo.Echo {
 	e := echo.New()
 	e.Debug = false
 	e.HideBanner = true
+	echopprof.Wrap(e)
 
 	var siteFS fs.FS = site
 
@@ -87,6 +115,12 @@ func serve() {
 		siteFS = os.DirFS(T(os.Getwd()))
 	}
 	e.StaticFS("/", echo.MustSubFS(siteFS, "site"))
+
+	e.Use(middleware.KeyAuthWithConfig(middleware.KeyAuthConfig{
+		KeyLookup: "header:X-Api-Key",
+		Validator: apiKeyValidator,
+		Skipper:   apiKeySkipper,
+	}))
 
 	e.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
 		DisablePrintStack: true,
@@ -110,9 +144,9 @@ func serve() {
 
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte("!"))))
 
-	e.GET("/time", func(c echo.Context) error {
-		return c.String(200, fmt.Sprint(time.Now().Format(time.RFC3339)))
-	})
+	e.GET("/time", TimeHandler)
+
+	e.GET("/ping", PingHandler)
 
 	colonies := map[string]*Colony{}
 	var lock = sync.RWMutex{}
@@ -183,7 +217,10 @@ func serve() {
 		g.End()
 		return nil
 	})
+	return e
+}
 
+func serve() {
 	var port string
 	if port = os.Getenv("PORT"); port == "" {
 		port = "8000"
@@ -191,6 +228,6 @@ func serve() {
 	hostname := T(os.Hostname())
 	log.Info().Str("hostname", hostname).Str("port", port).Send()
 
-	err := e.Start(":" + port)
+	err := Configure().Start(":" + port)
 	log.Fatal().Err(err).Send()
 }
