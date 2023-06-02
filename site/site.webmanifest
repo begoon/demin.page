@@ -1,6 +1,6 @@
 {
     "name": "demin.page",
-    "short_name": "demin.page",
+    "short_name": "demin",
     "icons": [
         {
             "src": "assets/android-chrome-192x192.png",
@@ -13,7 +13,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
+    "theme_color": "#000000",
     "background_color": "#ffffff",
-    "display": "standalone"
+    "display": "standalone",
+    "start_url": "."
 }
