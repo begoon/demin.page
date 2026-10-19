@@ -1,2 +1,4 @@
-*.xz
+.vercel
 exe
+tmp
+.env*

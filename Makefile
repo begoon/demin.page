@@ -1,37 +1,19 @@
 all:
 
-CMD=main
-NAME=exe
+build:
+	go build -o ./exe .
 
-build: css
-	CGO_ENABLED=0 go build -o $(NAME) ./$(CMD).go
+dev:
+	air \
+	--build.cmd "make build" \
+	--build.bin "./exe" \
+	--build.include_ext "go,tpl,tmpl,html,css,js"
 
-serve:
-	$(NAME) --local
+deploy:
+	vercel deploy --prod
 
-space-build-linux-amd64: css
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
-	go build -o micro/$(NAME) ./$(CMD).go
-	ls -al micro/$(NAME)
-	xz -9 -f micro/$(NAME)
-	ls -al micro/$(NAME)*
+README_URL = https://raw.githubusercontent.com/begoon/begoon/main/README.md
 
-deploy: space-build-linux-amd64 push
-
-push:
-	(cd micro && spacex push --verbose)
-
-css:
-	tailwindcss -m -i ./tailwind.css -o ./site/style.css
-
-watch:
-	npx watch "make css" ./site
-
-ui-build:
-	npm run build
-
-ui-serve:
-	npm run dev
-
-ui-preview:
-	npm run preview
+vendor-readme:
+	curl -fsSL $(README_URL) -o internal/web/content/README.md
+	git --no-pager diff --stat internal/web/content/README.md
