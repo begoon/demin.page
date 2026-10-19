@@ -108,6 +108,7 @@ Compilers, interpreters and assemblers, all written from scratch and runnable in
 
 ## Chatbots
 
+- [telegram-bot-serverless](https://github.com/begoon/telegram-bot-serverless) - Notes bot and Mini App running on Telegram Serverless with persistent SQLite storage
 - [sveltekit-bot](https://github.com/begoon/sveltekit-bot) - Telegram webhook bot built with SvelteKit and deployed on Vercel
 - [discord-bot](https://github.com/begoon/discord-bot) - Discord bots built with Bun and deployed on Vercel, using Gateway WebSockets and signed HTTP callbacks
 
