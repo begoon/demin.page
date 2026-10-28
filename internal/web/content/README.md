@@ -84,7 +84,7 @@ Compilers, interpreters and assemblers, all written from scratch and runnable in
 - [mastermind-web](https://github.com/begoon/mastermind) - browser game where the computer guesses your code and detects inconsistent answers ([play](https://demin.ws/mastermind/))
 - [vigenere](https://github.com/begoon/vigenere) - Vigenère cipher breaker, the etude from Wetherell's "Etudes for Programmers" (Zig, V, Go, WASM, Web) ([online](https://demin.ws/vigenere))
 - [ssb](https://github.com/begoon/ssb) - in-browser demonstration of Single Side Band radio modulation ([online](https://begoon.github.io/ssb))
-- [Mayne-James compression](https://github.com/begoon/tmpz/tree/main/mayne-james-compression) (an LZ precursor) and the [GPM macro processor](https://github.com/begoon/tmpz/tree/main/gpm-macro)
+- [Mayne-James compression](https://github.com/begoon/mayne-james-compression) (an LZ precursor) and the [GPM macro processor](https://github.com/begoon/tmpz/tree/main/gpm-macro)
 
 ## Tools
 
