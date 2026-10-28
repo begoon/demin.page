@@ -80,7 +80,7 @@ Compilers, interpreters and assemblers, all written from scratch and runnable in
 - [svg-draw](https://github.com/begoon/svg-draw) - web playground for a JavaScript DSL that draws scientific illustrations ([online](https://begoon.github.io/svg-draw))
 - [gomoku](https://github.com/begoon/gomoku-zig) - Gomoku AI agent, see Highlights
 - [sokoban-solver](https://github.com/begoon/zig-sokoban-solver) - Sokoban solver in Zig and WASM ([online](https://demin.ws/zig-sokoban-solver/)), plus [60 Sokoban maps](https://github.com/begoon/sokoban-maps) (★49)
-- [mastermind](https://github.com/begoon/tmpz/tree/main/mastermind) - Mastermind solver using Knuth's five-guess algorithm, implemented in Python, V and Zig
+- [mastermind](https://github.com/begoon/mastermind/tree/main/knuth) - Mastermind solver using Knuth's five-guess algorithm, implemented in Python, V and Zig
 - [mastermind-web](https://github.com/begoon/mastermind) - browser game where the computer guesses your code and detects inconsistent answers ([play](https://demin.ws/mastermind/))
 - [vigenere](https://github.com/begoon/vigenere) - Vigenère cipher breaker, the etude from Wetherell's "Etudes for Programmers" (Zig, V, Go, WASM, Web) ([online](https://demin.ws/vigenere))
 - [ssb](https://github.com/begoon/ssb) - in-browser demonstration of Single Side Band radio modulation ([online](https://begoon.github.io/ssb))
