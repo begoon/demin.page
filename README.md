@@ -12,7 +12,7 @@ Production: https://demin.page
 Source: `~/github/demin.page` (GitHub: `begoon/demin.page`). The existing
 Vercel project is `demin-page`; `.vercel` and `.env*` are local-only files.
 
-See `CLAUDE.md` for the Vercel setup details.
+See `AGENTS.md` for the Vercel setup details.
 
 ## Vercel deployment and README updates
 
