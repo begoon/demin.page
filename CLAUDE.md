@@ -37,6 +37,12 @@ production URL https://demin.page.
   (`begoon/demin.page`); pushing does nothing. `make deploy` runs
   `vercel deploy --prod` and uploads the working tree as-is, committed or not.
   Vercel runs its own `go build`; no local build is needed first.
+- **Automatic README deploys:** `begoon/begoon` owns
+  `.github/workflows/deploy-demin-page.yml`. README changes on `main` (or a
+  manual workflow run) check out this site's `main`, copy the triggering
+  README into the vendored path, and deploy via Vercel CLI. The copied file
+  is not committed here. Run `make vendor-readme` before local deployments
+  to avoid restoring an outdated README. See `README.md` for CI authentication.
 - **Version badge** reads `VERCEL_GIT_COMMIT_SHA`, which the CLI deploy fills
   from the local repo, with a fallback to Go's VCS build stamp locally.
 

@@ -14,6 +14,98 @@ Vercel project is `demin-page`; `.vercel` and `.env*` are local-only files.
 
 See `CLAUDE.md` for the Vercel setup details.
 
+## Vercel deployment and README updates
+
+The Vercel project `demin-page` belongs to team `me-default` and serves
+https://demin.page. `vercel.json` selects the Go framework, enables Fluid
+compute, and places the server in London (`lhr1`). Vercel builds the Go
+application from the uploaded source.
+
+Manual deployments use the authenticated local Vercel CLI:
+
+```sh
+make vendor-readme
+make deploy
+```
+
+`make vendor-readme` downloads `README.md` from `begoon/begoon` on `main`
+into `internal/web/content/README.md`. Go embeds that file in the binary,
+and the application renders it once at startup; it does not fetch updates
+at runtime. `make deploy` uploads the current working tree, including
+uncommitted changes, with `vercel deploy --prod`.
+
+The Vercel project is not connected to Vercel's Git integration. Pushing this
+site repository does not redeploy it; README changes in `begoon/begoon` trigger
+the GitHub Actions workflow below.
+
+### GitHub Actions automation
+
+The [deployment workflow](https://github.com/begoon/begoon/blob/main/.github/workflows/deploy-demin-page.yml)
+lives in `begoon/begoon` and runs when a push to
+`main` changes `README.md`. It checks out `begoon/demin.page`, copies the
+README from the triggering source commit into `internal/web/content/README.md`,
+then deploys that working tree with the Vercel CLI. Using the triggering
+commit ensures the deployed README matches the update that started the run.
+It deploys the site repository's `main` branch, uses Node.js 22 and Vercel CLI
+63.1.0, and serializes production deployments. It does not commit the copied
+README back to this repository. Before a manual local deployment, run
+`make vendor-readme` to avoid deploying an older vendored copy.
+
+To redeploy manually through GitHub Actions:
+
+```sh
+gh workflow run deploy-demin-page.yml --repo begoon/begoon --ref main
+```
+
+Authentication uses these Actions secrets in **begoon/begoon → Settings →
+Secrets and variables → Actions**:
+
+| Secret | Source | Setup status (2026-11-11) |
+| --- | --- | --- |
+| `VERCEL_ORG_ID` | `orgId` in local `.vercel/project.json` | Configured |
+| `VERCEL_PROJECT_ID` | `projectId` in local `.vercel/project.json` | Configured |
+| `VERCEL_TOKEN` | Vercel access token authorized for the project and its team | Project access verified; configured |
+
+The workflow checks out the site into `site` and deploys it with:
+
+```yaml
+- name: Deploy to Vercel
+  working-directory: site
+  env:
+    VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  run: npx --yes vercel@63.1.0 deploy --prod --yes --token="$VERCEL_TOKEN"
+```
+
+This requires Node.js/npm on the runner and lets Vercel perform the build.
+It does not require connecting the project to Vercel's Git integration.
+See [Vercel's GitHub Actions guide](https://vercel.com/kb/guide/how-can-i-use-github-actions-with-vercel).
+
+### Authentication setup
+
+The installed Vercel CLI (63.1.0) supports `vercel tokens create`, including
+project scoping, but the current CLI session was rejected with
+`Cannot create tokens for this app`. A separate `VERCEL_TOKEN` in local
+`.env` also failed project access verification with `You are not authorized`;
+that token was not copied to GitHub. The replacement token subsequently passed
+project access verification and was saved as `VERCEL_TOKEN` in `begoon/begoon`'s
+Actions secrets on 2026-11-11. A
+[manual CI run](https://github.com/begoon/begoon/actions/runs/42992102620)
+successfully deployed to production on the same date, verifying deployment
+permissions as well as project access.
+
+To replace the token in future, create one with access to the owning team at
+[Vercel Account → Tokens](https://vercel.com/account/tokens), verify that it
+can access `demin-page`, then store it using the interactive secret prompt:
+
+```sh
+gh secret set VERCEL_TOKEN --repo begoon/begoon
+```
+
+Keep token values out of committed files and command history. `.env*` and
+`.vercel` are gitignored.
+
 ## demin.page DNS backup
 
 Snapshot of the Squarespace DNS settings for `demin.page` taken on
