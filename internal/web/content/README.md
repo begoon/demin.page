@@ -97,7 +97,7 @@ Compilers, interpreters and assemblers, all written from scratch and runnable in
 
 ## CI/CD
 
-- [gcp-cli](https://github.com/begoon/gcp-cli) - Go command-line tools for Cloud Run deployments, Compute Engine VMs and everyday development tasks
+- [cr](https://github.com/begoon/cr) - Go command-line tools for Cloud Run deployments, Compute Engine VMs and everyday development tasks
 - [ghasha](https://github.com/begoon/ghasha) - GitHub Action exposing SHA, SHORT_SHA and BRANCH for the current commit ([marketplace](https://github.com/marketplace/actions/ghasha-sha-and-branch))
 - [ghasecret](https://github.com/begoon/ghasecret) - GitHub Action for debugging CI: encodes a value so it survives the workflow log masking ([marketplace](https://github.com/marketplace/actions/ghasecret))
 - [diskspace-action](https://github.com/begoon/diskspace-action) - GitHub Action checking remote disk space over SSH before deployment ([marketplace](https://github.com/marketplace/actions/disk-space))
@@ -105,6 +105,10 @@ Compilers, interpreters and assemblers, all written from scratch and runnable in
 ## Frameworks
 
 - [go-svelte](https://github.com/begoon/go-svelte) - Svelte + Go hybrid SPA/MPA application (★32)
+
+## AI agents
+
+- [ai-agent](https://github.com/begoon/ai-agent) - Generic AI agent/harness: tool calls, append-only session log, resume after interruption, context compaction and long-term memory
 
 ## Chatbots
 
@@ -115,6 +119,7 @@ Compilers, interpreters and assemblers, all written from scratch and runnable in
 
 ## Applications
 
+- [callme](https://github.com/begoon/callme) - instant "call or message me" links for WhatsApp, Telegram, Signal, Viber and other messengers from a phone number or username PWA ([online](https://demin.ws/callme/))
 - [xc](https://github.com/begoon/xc) - portable single-file dual-panel file manager with a VFS layer (S3, GCS, SSH), `uvx xcfm` from [PyPI](https://pypi.org/project/xcfm/)
 - [tube](https://github.com/begoon/tfl) - Transport for London timetable and line status viewer ([online](https://demin.ws/tfl))
 - [imf](https://github.com/begoon/imf) - diet setup calculator for Lyle McDonald's *Intermittent Modified Fasting* book ([online](https://demin.ws/imf/))
