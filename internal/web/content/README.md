@@ -42,7 +42,7 @@ The full list of public repositories sorted by stars is in [stars.md](stars.md).
 
 Compilers, interpreters and assemblers, all written from scratch and runnable in the browser or via `npx`.
 
-- [jbcc](https://github.com/jbc-lang/jbcc) - jBC/jBASE to C compiler (`uvx jbcc`, <a href="https://online.jbc-lang.org/" target="_blank">online</a>)
+- [jbcc](https://github.com/jbc-lang/jbcc) - jBC/jBASE to C compiler (`uvx jbcc`, [online](https://online.jbc-lang.org/))
 - [c8080-js](https://github.com/begoon/c8080-js) - Intel 8080 C compiler ported to TypeScript (`npx c8080`, [online](https://rk86.ru/beta/c8080))
 - [plm80](https://github.com/begoon/plm80) - PL/M compiler for Intel 8080 and Радио-86РК (`npx plm80`, [online](https://demin.ws/plm80/))
 - [asm8](https://github.com/begoon/asm8) - Intel 8080 assembler in TypeScript (`npx asm8080`, [online](https://begoon.github.io/asm8/))
